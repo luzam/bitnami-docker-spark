@@ -10,12 +10,13 @@ ENV HOME="/" \
 COPY prebuildfs /
 # Install required system packages and dependencies
 RUN install_packages ca-certificates curl gzip libbz2-1.0 libc6 libffi6 libgcc1 liblzma5 libncursesw6 libreadline7 libsqlite3-0 libssl1.1 libstdc++6 libtinfo6 procps tar zlib1g
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "python" "3.6.10-13" --checksum 06e7d2fd58444182b4008745ee50ff404f7dd715d681604ade35f07aef9048fc
+
 RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "java" "1.8.252-3" --checksum 8631fe0cc0887a566e878939cf8cd58650be5d5de23f3c6f94fffb258aadeb3a
 RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "spark" "2.4.6-0" --checksum 6168be1c016fee2a9d16a8ad1ec09dbbe6e99ebed8893b7c4fd370b5eaf252ea
 RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "gosu" "1.12.0-0" --checksum 582d501eeb6b338a24f417fededbf14295903d6be55c52d66c52e616c81bcd8c
-RUN apt-get update && apt-get upgrade -y && \
+RUN apt-get update && apt-get upgrade -y && apt-get install python3 -y &&\
     rm -r /var/lib/apt/lists /var/cache/apt/archives
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 0
 
 COPY rootfs /
 RUN /opt/bitnami/scripts/spark/postunpack.sh
